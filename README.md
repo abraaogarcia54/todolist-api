@@ -1,6 +1,6 @@
 # 📝 ToDo List API
 
-API REST para gerenciamento de tarefas (To-Do List) desenvolvida com Spring Boot, aplicando boas práticas como arquitetura em camadas, validação de dados, tratamento de erros e autenticação com JWT via Spring Security.
+API REST para gerenciamento de tarefas (To-Do List) desenvolvida com Spring Boot, com foco em boas práticas, validações de negócio e controle de acesso por usuário.
 
 ## 🚀 Tecnologias
 
@@ -8,94 +8,100 @@ API REST para gerenciamento de tarefas (To-Do List) desenvolvida com Spring Boot
 * Spring Boot
 * Spring Web
 * Spring Data JPA
-* Spring Security
-* JWT
 * Hibernate
 * Maven
+* BCrypt (hash de senha)
 
 ## 📌 Funcionalidades
 
 ### 👤 Usuários
 
-* Cadastro de usuários
-* Autenticação com JWT
+* Cadastro de usuário
+* Validação de usuário já existente
+* Criptografia de senha com BCrypt
+
+### 🔐 Autenticação
+
+* Autenticação via Basic Auth
+* Validação de credenciais no filtro
+* Proteção de rotas `/tasks`
+* Associação de tarefas ao usuário autenticado
 
 ### ✅ Tarefas
 
-* Criar tarefa
-* Listar tarefas
+* Criar tarefa vinculada ao usuário
+* Listar tarefas do usuário
 * Atualizar tarefa
-* Deletar tarefa
+* Validação de permissão (usuário só altera suas próprias tarefas)
 
-### 🔎 Filtros
+### ⏰ Regras de negócio
 
-* Filtragem de tarefas por critérios
+* Data de início e término devem ser maiores que a data atual
+* Data de início não pode ser maior que a data de término
 
 ### ⚠️ Tratamento de erros
 
-* Respostas padronizadas de erro
-* Validação de dados
+* Retornos com status HTTP apropriados
+* Mensagens de erro claras
 
 ## 📂 Estrutura do projeto
 
-O projeto segue arquitetura em camadas:
-
-* `controller` → Entrada das requisições
-* `service` → Regras de negócio
-* `repository` → Acesso ao banco
-* `user` → Módulo de usuários
-* `task` → Módulo de tarefas
-* `filter` → Filtros
+* `user` → Cadastro de usuários
+* `task` → Regras e operações das tarefas
+* `filter` → Autenticação e interceptação de requisições
 * `errors` → Tratamento de exceções
-* `utils` → Utilitários
+* `utils` → Funções auxiliares
 
 ## ▶️ Como executar
 
-```bash
-# Clonar repositório
+```bash id="t7e9mz"
 git clone https://github.com/seu-usuario/todolist-api.git
-
-# Entrar na pasta
 cd todolist-api
-
-# Rodar aplicação
 ./mvnw spring-boot:run
 ```
 
-A API estará disponível em:
-http://localhost:8080
+## 🔍 Autenticação (exemplo)
 
-## 🔐 Autenticação
+Header da requisição:
 
-A API utiliza autenticação via JWT.
+```
+Authorization: Basic base64(usuario:senha)
+```
 
-1. Faça login
-2. Receba o token
-3. Envie no header das requisições:
+Exemplo usando curl:
 
-Authorization: Bearer {token}
+```bash id="v7c4rp"
+curl -X GET http://localhost:8080/tasks/ \
+-u usuario:senha
+```
 
-## 🔍 Exemplos de endpoints
+## 🔍 Endpoints
+
+### Usuários
+
+| Método | Endpoint | Descrição     |
+| ------ | -------- | ------------- |
+| POST   | /users/  | Criar usuário |
+
+### Tarefas
 
 | Método | Endpoint    | Descrição        |
 | ------ | ----------- | ---------------- |
-| POST   | /auth/login | Login usuário    |
-| POST   | /users      | Criar usuário    |
-| GET    | /tasks      | Listar tarefas   |
-| POST   | /tasks      | Criar tarefa     |
+| POST   | /tasks/     | Criar tarefa     |
+| GET    | /tasks/     | Listar tarefas   |
 | PUT    | /tasks/{id} | Atualizar tarefa |
-| DELETE | /tasks/{id} | Remover tarefa   |
 
 ## 📚 Objetivo
 
-Projeto desenvolvido para praticar construção de APIs REST com Spring Boot, segurança com JWT e boas práticas de organização de código.
+Projeto desenvolvido para praticar construção de APIs REST, autenticação, validação de dados e controle de acesso.
 
-## 💡 Melhorias futuras
+## 💡 Diferenciais
 
-* Paginação
-* Swagger (documentação)
-* Testes automatizados
-* Deploy em cloud
+* Autenticação customizada com filtro
+* Controle de acesso por usuário
+* Criptografia de senha com BCrypt
+* Validação de regras de negócio
+* Update parcial de entidades
 
 ## 📄 Licença
 
